@@ -1,0 +1,23 @@
+{
+    "name": "brunty/globle",
+    "description": "A PHP Container compatible with container-interop",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "brunty",
+            "email": "matt@mfyu.co.uk"
+        }
+    ],
+    "require": {
+        "container-interop/container-interop": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Brunty\\Globle\\": "src/",
+            "Brunty\\Globle\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.4"
+    }
+}
