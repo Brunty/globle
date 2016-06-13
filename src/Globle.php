@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Brunty\Globle;
 
+use Brunty\Globle\Exceptions\NotFoundException;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
-use Interop\Container\Exception\NotFoundException;
 
 class Globle implements ContainerInterface
 {
@@ -89,7 +89,7 @@ class Globle implements ContainerInterface
     public function get($id)
     {
         if ( ! $this->has($id)) {
-            throw new \InvalidArgumentException(sprintf('%s does not exist as a binding', $id));
+            throw new NotFoundException(sprintf('%s does not exist as a binding', $id));
         }
 
         return $this->resolve($id);
