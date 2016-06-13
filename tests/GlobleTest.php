@@ -34,7 +34,7 @@ class GlobleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Brunty\Globle\Exceptions\NotFoundException
      */
     public function testItThrowsAnExceptionIfRequestingAnObjectThatDoesNotExist()
     {
