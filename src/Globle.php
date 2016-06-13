@@ -22,7 +22,7 @@ class Globle implements ContainerInterface
      *
      * @var array
      */
-    private $keys = [];
+    private $ids = [];
 
     /**
      * @var array
@@ -30,14 +30,50 @@ class Globle implements ContainerInterface
     private $resolved = [];
 
     /**
+     * This will hold the list of IDs for things in our container that are not to be stored as resolved.
+     *
+     * Getting one of these will return a new instance of whatever it is every single time.
+     *
+     * @var array
+     */
+    private $factories = [];
+
+    /**
      * Globle constructor.
      *
      * @param array $items
+     * @param array $factories
      */
-    public function __construct(array $items = [])
+    public function __construct(array $items = [], array $factories = [])
     {
         $this->items = $items;
-        $this->keys = array_fill_keys(array_keys($items), 'Globle');
+        $this->ids = array_keys($items);
+        $this->factories = $factories;
+    }
+
+    /**
+     * Bind into our container
+     *
+     * @param          $id
+     * @param callable $closure
+     */
+    public function bind($id, callable $closure)
+    {
+        $this->addItem($id, $closure);
+    }
+
+    /**
+     * Bind into our container
+     *
+     * If you bind an item like this, each time you request it from the container, a new instance will be created.
+     *
+     * @param          $id
+     * @param callable $closure
+     */
+    public function factory($id, callable $closure)
+    {
+        $this->addItem($id, $closure);
+        $this->factories[] = $id;
     }
 
     /**
@@ -55,7 +91,7 @@ class Globle implements ContainerInterface
         if ( ! $this->has($id)) {
             throw new \InvalidArgumentException(sprintf('%s does not exist as a binding', $id));
         }
-        
+
         return $this->resolve($id);
     }
 
@@ -69,7 +105,7 @@ class Globle implements ContainerInterface
      */
     public function has($id) : bool
     {
-        return isset($this->keys[$id]);
+        return in_array($id, $this->ids);
     }
 
     /**
@@ -79,11 +115,26 @@ class Globle implements ContainerInterface
      */
     private function resolve($id)
     {
-
         if (isset($this->resolved[$id])) {
             return $this->resolved[$id];
         }
 
+        $item = $this->items[$id]($this);
+        if ( ! in_array($id, $this->factories)) {
+            $this->resolved[$id] = $item;
+        }
 
+        return $item;
+
+    }
+
+    /**
+     * @param          $id
+     * @param callable $closure
+     */
+    private function addItem($id, callable $closure)
+    {
+        $this->items[$id] = $closure;
+        $this->ids[] = $id;
     }
 }

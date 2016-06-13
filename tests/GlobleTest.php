@@ -48,4 +48,82 @@ class GlobleTest extends \PHPUnit_Framework_TestCase
 
         $sut->get('FooBar');
     }
+
+
+    public function testItGetsAFreshClassThatHasNotAlreadyBeenResolved()
+    {
+        $sut = new Globle(
+            [
+                'MyClass' => function () {
+                    return new \stdClass;
+                }
+            ]
+        );
+
+        $object = $sut->get('MyClass');
+
+        $this->assertInstanceOf(\stdClass::class, $object);
+    }
+
+    public function testItGetsTheSameInstanceOfAClassByDefault()
+    {
+
+        $sut = new Globle(
+            [
+                'MyClass' => function () {
+                    return new \stdClass;
+                }
+            ]
+        );
+
+        $object = $sut->get('MyClass');
+        $secondObject = $sut->get('MyClass');
+
+        $this->assertSame($object, $secondObject);
+    }
+
+    public function testItGetsANewClassEveryTimeIfItsBoundAsAFactoryThroughTheConstructor()
+    {
+        $sut = new Globle(
+            [
+                'MyClass' => function () {
+                    return new \stdClass;
+                }
+            ],
+            [
+                'MyClass'
+            ]
+        );
+
+        $object = $sut->get('MyClass');
+        $secondObject = $sut->get('MyClass');
+
+        $this->assertNotSame($object, $secondObject);
+    }
+
+    public function testItGetsANewClassEveryTimeIfItsBoundThroughTheFactoryMethod()
+    {
+        $sut = new Globle;
+        $sut->factory('MyClass', function() {
+            return new \stdClass;
+        });
+
+        $object = $sut->get('MyClass');
+        $secondObject = $sut->get('MyClass');
+
+        $this->assertNotSame($object, $secondObject);
+    }
+
+    public function testItGetsTheSameClassEveryTimeIfItsBoundThroughTheBindMethod()
+    {
+        $sut = new Globle;
+        $sut->bind('MyClass', function() {
+            return new \stdClass;
+        });
+
+        $object = $sut->get('MyClass');
+        $secondObject = $sut->get('MyClass');
+
+        $this->assertSame($object, $secondObject);
+    }
 }
