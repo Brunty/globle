@@ -42,9 +42,9 @@ $globle->bind(MyClass::class, function() {
 });
 ```
 
-**By default, each time you call `get($id)` you will receive the same instance of the class as the first time it was resolved.
+**By default, each time you call `get($id)` you will receive the same instance of the class as the first time it was resolved.**
 
-If you want to get a new instance each time, you can bind it into the container via an additional array of identifiers in the constructor:**
+**If you want to get a new instance each time, you can bind it into the container via an additional array of identifiers in the constructor:**
  
 ```php
 $items = [
