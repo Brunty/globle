@@ -83,9 +83,6 @@ The function defined when binding an item into the container can have an instanc
 For example:
 
 ```php
-
-
-
 class Foo
 {
 
