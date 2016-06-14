@@ -3,6 +3,7 @@
 namespace Brunty\Globle\Tests;
 
 use Brunty\Globle\Globle;
+use Interop\Container\ContainerInterface;
 
 class GlobleTest extends \PHPUnit_Framework_TestCase
 {
@@ -104,9 +105,12 @@ class GlobleTest extends \PHPUnit_Framework_TestCase
     public function testItGetsANewClassEveryTimeIfItsBoundThroughTheFactoryMethod()
     {
         $sut = new Globle;
-        $sut->factory('MyClass', function() {
-            return new \stdClass;
-        });
+        $sut->factory(
+            'MyClass',
+            function () {
+                return new \stdClass;
+            }
+        );
 
         $object = $sut->get('MyClass');
         $secondObject = $sut->get('MyClass');
@@ -117,13 +121,70 @@ class GlobleTest extends \PHPUnit_Framework_TestCase
     public function testItGetsTheSameClassEveryTimeIfItsBoundThroughTheBindMethod()
     {
         $sut = new Globle;
-        $sut->bind('MyClass', function() {
-            return new \stdClass;
-        });
+        $sut->bind(
+            'MyClass',
+            function () {
+                return new \stdClass;
+            }
+        );
 
         $object = $sut->get('MyClass');
         $secondObject = $sut->get('MyClass');
 
         $this->assertSame($object, $secondObject);
     }
+
+    public function testItCanUseItselfInTheCallableToInjectOtherObjectsItHasBound()
+    {
+
+        $sut = new Globle;
+        $sut->bind(
+            Bar::class,
+            function () {
+                return new Bar;
+            }
+        );
+        $sut->bind(
+            Foo::class,
+            function (ContainerInterface $container) {
+                return new Foo($container->get(Bar::class));
+            }
+        );
+
+        $foo = $sut->get(Foo::class);
+
+        $this->assertInstanceOf(Foo::class, $foo);
+        $this->assertInstanceOf(Bar::class, $foo->getBar());
+    }
+}
+
+
+class Foo
+{
+
+    /**
+     * @var Bar
+     */
+    private $bar;
+
+    /**
+     * @param Bar $bar
+     */
+    public function __construct(Bar $bar)
+    {
+        $this->bar = $bar;
+    }
+
+    /**
+     * @return Bar
+     */
+    public function getBar()
+    {
+        return $this->bar;
+    }
+}
+
+class Bar
+{
+
 }
