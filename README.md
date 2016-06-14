@@ -14,6 +14,8 @@ Globle implements `\Interop\Container\ContainerInterface`
 
 ## Usage
 
+### Binding
+
 You can bind items into the container in a few different ways:
 
 Via the constructor:
@@ -68,3 +70,60 @@ $globle->factory(MyClass::class, function() {
     return new MyClass;
 });
 ```
+
+### Getting objects
+
+Calling `$container->get($id);` will retrieve the defined item in the container.
+
+
+### Using the container to inject dependencies into other items:
+
+The function defined when binding an item into the container can have an instance of `Interop\Container\ContainerInterface` passed to it as a parameter, this will be the container itself so can be used to get other items.
+
+For example:
+
+```php
+
+
+
+class Foo
+{
+
+    /**
+     * @var Bar
+     */
+    private $bar;
+
+    /**
+     * @param Bar $bar
+     */
+    public function __construct(Bar $bar)
+    {
+        $this->bar = $bar;
+    }
+
+    /**
+     * @return Bar
+     */
+    public function getBar()
+    {
+        return $this->bar;
+    }
+}
+
+class Bar
+{
+
+}
+
+$globle = new \Brunty\Globle\Globle;
+
+$globle->bind(Bar::class, function() {
+    return new Bar;
+});
+
+$globle->bind(Foo::class, function(\Interop\Container\ContainerInterface $globle) {
+    return new Foo($globle->get(Bar::class));
+});
+```
+
