@@ -1,9 +1,10 @@
 # Globle - a PHP Container
 
+[![License](https://poser.pugx.org/brunty/globle/license)](https://packagist.org/packages/brunty/globle)
 [![Build Status](https://travis-ci.org/Brunty/Globle.svg?branch=master)](https://travis-ci.org/Brunty/Globle)
 [![Coverage Status](https://coveralls.io/repos/github/Brunty/Globle/badge.svg?branch=master)](https://coveralls.io/github/Brunty/Globle?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/brunty/globle/v/stable)](https://packagist.org/packages/brunty/globle)
-[![License](https://poser.pugx.org/brunty/globle/license)](https://packagist.org/packages/brunty/globle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Brunty/Globle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Brunty/Globle/?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/96d54ccee59944dca57f273e13cf461b)](https://www.codacy.com/app/matt-brunt/Globle?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Brunty/Globle&amp;utm_campaign=Badge_Grade)
 [![Code Climate](https://codeclimate.com/github/Brunty/Globle/badges/gpa.svg)](https://codeclimate.com/github/Brunty/Globle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/a7e48ce0-7a7f-492a-8da8-d7b4c94f00c8/mini.png)](https://insight.sensiolabs.com/projects/a7e48ce0-7a7f-492a-8da8-d7b4c94f00c8)
@@ -130,3 +131,6 @@ $globle->bind(Foo::class, function(\Interop\Container\ContainerInterface $globle
 });
 ```
 
+### Why all the badges?
+
+Because.
