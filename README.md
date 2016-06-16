@@ -130,3 +130,6 @@ $globle->bind(Foo::class, function(\Interop\Container\ContainerInterface $globle
 });
 ```
 
+### Why all the badges?
+
+Because.
