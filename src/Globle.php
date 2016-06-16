@@ -22,7 +22,7 @@ class Globle implements ContainerInterface
      *
      * @var array
      */
-    private $ids = [];
+    private $keys = [];
 
     /**
      * @var array
@@ -30,7 +30,7 @@ class Globle implements ContainerInterface
     private $resolved = [];
 
     /**
-     * This will hold the list of IDs for things in our container that are not to be stored as resolved.
+     * This will hold the list of keys for things in our container that are not to be stored as resolved.
      *
      * Getting one of these will return a new instance of whatever it is every single time.
      *
@@ -47,19 +47,19 @@ class Globle implements ContainerInterface
     public function __construct(array $items = [], array $factories = [])
     {
         $this->items = $items;
-        $this->ids = array_keys($items);
+        $this->keys = array_keys($items);
         $this->factories = $factories;
     }
 
     /**
      * Bind into our container
      *
-     * @param          $id
+     * @param          $key
      * @param callable $closure
      */
-    public function bind($id, callable $closure)
+    public function bind($key, callable $closure)
     {
-        $this->addItem($id, $closure);
+        $this->addItem($key, $closure);
     }
 
     /**
@@ -67,61 +67,61 @@ class Globle implements ContainerInterface
      *
      * If you bind an item like this, each time you request it from the container, a new instance will be created.
      *
-     * @param          $id
+     * @param          $key
      * @param callable $closure
      */
-    public function factory($id, callable $closure)
+    public function factory($key, callable $closure)
     {
-        $this->addItem($id, $closure);
-        $this->factories[] = $id;
+        $this->addItem($key, $closure);
+        $this->factories[] = $key;
     }
 
     /**
-     * Finds an entry of the container by its identifier and returns it.
+     * Finds an entry of the container by its key and returns it.
      *
-     * @param string $id Identifier of the entry to look for.
+     * @param string $key Identifier (key) of the entry to look for.
      *
      * @throws NotFoundException  No entry was found for this identifier.
      * @throws ContainerException Error while retrieving the entry.
      *
      * @return mixed Entry.
      */
-    public function get($id)
+    public function get($key)
     {
-        if ( ! $this->has($id)) {
-            throw new NotFoundException(sprintf('%s does not exist as a binding', $id));
+        if ( ! $this->has($key)) {
+            throw new NotFoundException(sprintf('%s does not exist as a binding', $key));
         }
 
-        return $this->resolve($id);
+        return $this->resolve($key);
     }
 
     /**
-     * Returns true if the container can return an entry for the given identifier.
+     * Returns true if the container can return an entry for the given key.
      * Returns false otherwise.
      *
-     * @param string $id Identifier of the entry to look for.
+     * @param string $key Identifier (key) of the entry to look for.
      *
      * @return boolean
      */
-    public function has($id) : bool
+    public function has($key) : bool
     {
-        return in_array($id, $this->ids);
+        return in_array($key, $this->keys);
     }
 
     /**
-     * @param $id
+     * @param $key
      *
      * @return mixed
      */
-    private function resolve($id)
+    private function resolve($key)
     {
-        if (isset($this->resolved[$id])) {
-            return $this->resolved[$id];
+        if (isset($this->resolved[$key])) {
+            return $this->resolved[$key];
         }
 
-        $item = $this->items[$id]($this);
-        if ( ! in_array($id, $this->factories)) {
-            $this->resolved[$id] = $item;
+        $item = $this->items[$key]($this);
+        if ( ! in_array($key, $this->factories)) {
+            $this->resolved[$key] = $item;
         }
 
         return $item;
@@ -129,12 +129,12 @@ class Globle implements ContainerInterface
     }
 
     /**
-     * @param          $id
+     * @param          $key
      * @param callable $closure
      */
-    private function addItem($id, callable $closure)
+    private function addItem($key, callable $closure)
     {
-        $this->items[$id] = $closure;
-        $this->ids[] = $id;
+        $this->items[$key] = $closure;
+        $this->keys[] = $key;
     }
 }
