@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Globle by Brunty</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Globle</h1>
+      <h2 class="project-tagline">Because we all like globle state, right?</h2>
+      <a href="https://github.com/Brunty/Globle" class="btn">View on GitHub</a>
+      <a href="https://github.com/Brunty/Globle/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Brunty/Globle/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="globle---a-php-container" class="anchor" href="#globle---a-php-container" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Globle - a PHP Container</h1>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Through composer:</p>
+
+<p><code>composer require brunty/globle</code></p>
+
+<h2>
+<a id="interop" class="anchor" href="#interop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interop</h2>
+
+<p>Globle implements <code>\Interop\Container\ContainerInterface</code></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="binding" class="anchor" href="#binding" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Binding</h3>
+
+<p>You can bind items into the container in a few different ways:</p>
+
+<p>Via the constructor:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$items</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-c1">MyClass</span><span class="pl-k">::</span><span class="pl-c1">class</span>  <span class="pl-k">=&gt;</span>  <span class="pl-k">function</span>() {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">MyClass</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\Brunty\Globle\</span><span class="pl-c1">Globle</span>(<span class="pl-smi">$items</span>);</span></pre></div>
+
+<p>This will bind to the container where the key of the array is the ID used to retrieve an item from the container.</p>
+
+<p>You can also bind after the container has been instantiated, simply call the <code>bind</code> function and pass it an ID and a callable.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\Brunty\Globle\</span><span class="pl-c1">Globle</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span><span class="pl-k">-&gt;</span>bind(<span class="pl-c1">MyClass</span><span class="pl-k">::</span><span class="pl-c1">class</span>, <span class="pl-k">function</span>() {</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">MyClass</span>;</span>
+<span class="pl-s1">});</span></pre></div>
+
+<p><strong>By default, each time you call <code>get($id)</code> you will receive the same instance of the class as the first time it was resolved.</strong></p>
+
+<p><strong>If you want to get a new instance each time, you can bind it into the container via an additional array of identifiers in the constructor:</strong></p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$items</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-c1">MyClass</span><span class="pl-k">::</span><span class="pl-c1">class</span>  <span class="pl-k">=&gt;</span>  <span class="pl-k">function</span>() {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">MyClass</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$factories</span> <span class="pl-k">=</span> [<span class="pl-c1">MyClass</span><span class="pl-k">::</span><span class="pl-c1">class</span>];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\Brunty\Globle\</span><span class="pl-c1">Globle</span>(<span class="pl-smi">$items</span>, <span class="pl-smi">$factories</span>);</span></pre></div>
+
+<p><strong>Or by binding via the <code>factory</code> method.</strong></p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\Brunty\Globle\</span><span class="pl-c1">Globle</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span><span class="pl-k">-&gt;</span>factory(<span class="pl-c1">MyClass</span><span class="pl-k">::</span><span class="pl-c1">class</span>, <span class="pl-k">function</span>() {</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">MyClass</span>;</span>
+<span class="pl-s1">});</span></pre></div>
+
+<h3>
+<a id="getting-objects" class="anchor" href="#getting-objects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting objects</h3>
+
+<p>Calling <code>$container-&gt;get($id);</code> will retrieve the defined item in the container.</p>
+
+<h3>
+<a id="using-the-container-to-inject-dependencies-into-other-items" class="anchor" href="#using-the-container-to-inject-dependencies-into-other-items" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using the container to inject dependencies into other items:</h3>
+
+<p>The function defined when binding an item into the container can have an instance of <code>Interop\Container\ContainerInterface</code> passed to it as a parameter, this will be the container itself so can be used to get other items.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">Foo</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> Bar</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$bar</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> Bar $bar</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-c1">Bar</span> <span class="pl-smi">$bar</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">bar</span> <span class="pl-k">=</span> <span class="pl-smi">$bar</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> Bar</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">getBar</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">bar</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">Bar</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">\Brunty\Globle\</span><span class="pl-c1">Globle</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span><span class="pl-k">-&gt;</span>bind(<span class="pl-c1">Bar</span><span class="pl-k">::</span><span class="pl-c1">class</span>, <span class="pl-k">function</span>() {</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">Bar</span>;</span>
+<span class="pl-s1">});</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$globle</span><span class="pl-k">-&gt;</span>bind(<span class="pl-c1">Foo</span><span class="pl-k">::</span><span class="pl-c1">class</span>, <span class="pl-k">function</span>(<span class="pl-c1">\Interop\Container\</span><span class="pl-c1">ContainerInterface</span> <span class="pl-smi">$globle</span>) {</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">Foo</span>(<span class="pl-smi">$globle</span><span class="pl-k">-&gt;</span>get(<span class="pl-c1">Bar</span><span class="pl-k">::</span><span class="pl-c1">class</span>));</span>
+<span class="pl-s1">});</span></pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Brunty/Globle">Globle</a> is maintained by <a href="https://github.com/Brunty">Brunty</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
